@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: demo        # 可選：啟動時自動建立資料庫
+      TZ: Asia/Taipei             # 設定時區
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql   # 資料持久化
+      - ./mysql_conf:/etc/mysql/conf.d # 可放自訂設定檔
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"] # 開啟 AOF 持久化
