@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf</title>
+</head>
+<body>
+
+<h3>變量輸出</h3>
+<h4><span th:text="${name}"></span></h4>
+<hr/>
+<div th:if="${gender} =='男'">
+    男
+</div>
+<div th:if="${gender} =='女'">
+    女
+</div>
+<div th:switch="${grade}">
+    <span th:case="1">1</span>
+    <span th:case="2">2</span>
+    <span th:case="3">3</span>
+</div>
+</body>
+</html>
