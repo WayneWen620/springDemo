@@ -19,4 +19,8 @@ public class Account {
     private String telephone;
     @Column(name = "address")
     private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id") // 外鍵欄位名稱
+    private Role role;
 }
