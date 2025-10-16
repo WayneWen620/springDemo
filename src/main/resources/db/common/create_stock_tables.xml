@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- Role 表 -->
+    <changeSet id="1" author="wen">
+        <createTable tableName="role">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)" />
+            <column name="description" type="VARCHAR(200)" />
+        </createTable>
+    </changeSet>
+
+    <!-- Account 表 -->
+    <changeSet id="2" author="wen">
+    <createTable tableName="account">
+        <column name="id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true"/>
+        </column>
+        <column name="name" type="VARCHAR(50)" />
+        <column name="gender" type="VARCHAR(10)" />
+        <column name="telephone" type="VARCHAR(20)" />
+        <column name="address" type="VARCHAR(100)" />
+        <column name="role_id" type="BIGINT" />
+    </createTable>
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="role_id"
+                                 referencedTableName="role"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_account_role"/>
+    </changeSet>
+
+    <!-- 建立 Stock 表 -->
+    <changeSet id="1" author="wen">
+        <createTable tableName="stock">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="symbol" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="market" type="VARCHAR(10)"/>
+            <column name="currency" type="VARCHAR(3)"/>
+            <column name="exchange_rate" type="DECIMAL(16,6)"/>
+            <column name="current_price" type="DECIMAL(16,4)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- 建立 Trade 表 -->
+    <changeSet id="2" author="wen">
+        <createTable tableName="trade">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="stock_id" type="BIGINT"/>
+            <column name="trade_date" type="DATE"/>
+            <column name="price" type="DECIMAL(16,4)"/>
+            <column name="quantity" type="INT"/>
+            <column name="type" type="VARCHAR(10)"/>
+            <column name="fee" type="DECIMAL(12,4)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="trade" baseColumnNames="stock_id"
+                                 referencedTableName="stock" referencedColumnNames="id"
+                                 constraintName="fk_trade_stock"/>
+    </changeSet>
+
+    <!-- 建立 Dividend 表 -->
+    <changeSet id="3" author="wen">
+        <createTable tableName="dividend">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="stock_id" type="BIGINT"/>
+            <column name="dividend_date" type="DATE"/>
+            <column name="amount_per_share" type="DECIMAL(10,4)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="dividend" baseColumnNames="stock_id"
+                                 referencedTableName="stock" referencedColumnNames="id"
+                                 constraintName="fk_dividend_stock"/>
+    </changeSet>
+</databaseChangeLog>
