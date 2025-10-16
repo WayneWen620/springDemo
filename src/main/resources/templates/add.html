@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用戶新增</title>
+</head>
+<body>
+<h3>用戶新增</h3>
+<form action="/add" method="post">
+    使用者:<input type="text" name="name"/><font color="red" th:errors="${account.name}"></font><br/>
+    密碼:<input type="password" name="password"/><font color="red" th:errors="${account.password}"></font><br/>
+    年齡:<input type="text" name="age"/><br/>
+    Tel:<input type="text" name="telephone"/><br/>
+    address:<input type="text" name="address"/><br/>
+    <input type="submit" value="Save">
+</form>
+</body>
+</html>
