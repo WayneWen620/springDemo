@@ -1,7 +1,9 @@
 package com.example.demo.quartz;
 
+import org.quartz.spi.JobFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
@@ -22,24 +24,21 @@ public class QuartzConfig {
      * 2.創建 Trigger
      */
     @Bean
-    public SimpleTriggerFactoryBean getSimpleTriggerFactoryBean(JobDetailFactoryBean jobDetailFactoryBean){
-        SimpleTriggerFactoryBean factory = new SimpleTriggerFactoryBean();
+    public CronTriggerFactoryBean getSimpleTriggerFactoryBean(JobDetailFactoryBean jobDetailFactoryBean){
+        CronTriggerFactoryBean factory = new CronTriggerFactoryBean();
         //關聯JobDetail
         factory.setJobDetail(jobDetailFactoryBean.getObject());
-        //重複間格時間(毫秒為單位)
-        factory.setRepeatInterval(5000);
-        //重複次數
-        factory.setRepeatCount(4);
-
+        factory.setCronExpression("0/3 * * * * ?");
         return  factory;
     }
     /**
      * 3.創建 Scheduler
      */
     @Bean
-    public SchedulerFactoryBean getSchedulerFactoryBean(SimpleTriggerFactoryBean simpleTriggerFactoryBean){
+    public SchedulerFactoryBean getSchedulerFactoryBean(CronTriggerFactoryBean simpleTriggerFactoryBean, JobFactory jobFactory){
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setTriggers(simpleTriggerFactoryBean.getObject());
+        factory.setJobFactory(jobFactory);
         return  factory;
     }
 }
