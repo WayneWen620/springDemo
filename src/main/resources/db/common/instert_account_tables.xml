@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- ✅ 插入初始資料 -->
+    <changeSet id="3" author="wen">
+        <!-- 角色資料 -->
+        <insert tableName="role">
+            <column name="id" value="1"/>
+            <column name="name" value="ADMIN"/>
+            <column name="description" value="系統管理者"/>
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="2"/>
+            <column name="name" value="USER"/>
+            <column name="description" value="一般使用者"/>
+        </insert>
+        <!-- 權限資料 -->
+        <insert tableName="authority">
+            <column name="name" value="READ"/>
+            <column name="description" value="讀取權限"/>
+        </insert>
+        <insert tableName="authority">
+            <column name="name" value="WRITE"/>
+            <column name="description" value="寫入權限"/>
+        </insert>
+        <!-- 角色與權限關聯 -->
+        <!-- 假設 role_id 1 = ADMIN, role_id 2 = USER -->
+        <!-- 假設 authority_id 1 = READ, authority_id 2 = WRITE -->
+        <insert tableName="role_authority">
+            <column name="role_id" value="1"/>
+            <column name="authority_id" value="1"/>
+        </insert>
+        <insert tableName="role_authority">
+            <column name="role_id" value="1"/>
+            <column name="authority_id" value="2"/>
+        </insert>
+        <insert tableName="role_authority">
+            <column name="role_id" value="2"/>
+            <column name="authority_id" value="1"/>
+        </insert>
+        <!-- 帳號資料 -->
+        <insert tableName="account">
+            <column name="id" value="1"/>
+            <column name="name" value="Alice"/>
+            <column name="gender" value="女"/>
+            <column name="telephone" value="0912345678"/>
+            <column name="address" value="台北市中山區"/>
+            <column name="password" value="{bcrypt}$2a$10$0rAtBWAVJxIsHPifJJAiAuTitLTx9EW67Fj/65id/JEqBIbftGxOC"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="role_id" value="1"/>
+        </insert>
+
+        <insert tableName="account">
+            <column name="id" value="2"/>
+            <column name="name" value="Bob"/>
+            <column name="gender" value="男"/>
+            <column name="telephone" value="0987654321"/>
+            <column name="address" value="新北市板橋區"/>
+            <column name="password" value="{noop}!QAZ@12345"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="role_id" value="2"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

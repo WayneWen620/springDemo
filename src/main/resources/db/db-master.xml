@@ -1,0 +1,8 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- 初始化資料，請勿異動 -->
+<!--    <include file="classpath:db/common/create_account_tables.xml" relativeToChangelogFile="false" />-->
+<!--    <include file="classpath:db/common/instert_account_tables.xml" relativeToChangelogFile="false" />-->
+
+
+</databaseChangeLog>
