@@ -27,4 +27,6 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id") // 外鍵欄位名稱
     private Role role;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true; // 預設啟用
 }
