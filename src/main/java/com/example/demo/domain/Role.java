@@ -2,6 +2,7 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name="role")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,10 +23,9 @@ public class Role {
     @Column(name = "description")
     private String description; // 角色描述，如「系統管理者」
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @Transient
     private List<Account> accounts = new ArrayList<>();
-    // ✅ 如果要支援多權限
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "role_authority",

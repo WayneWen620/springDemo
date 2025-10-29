@@ -4,14 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
-
-import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -28,21 +24,6 @@ public class ProjectSecurityConfig {
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-        manager.setUsersByUsernameQuery("SELECT name AS username, password, enabled FROM account WHERE name=?");
-        manager.setAuthoritiesByUsernameQuery(
-                "SELECT u.name AS username, a.name AS authority " +
-                        "FROM account u " +
-                        "JOIN role r ON u.role_id = r.id " +
-                        "JOIN role_authority ra ON r.id = ra.role_id " +
-                        "JOIN authority a ON ra.authority_id = a.id " +
-                        "WHERE u.name=?"
-        );
-        return manager;
     }
 
     @Bean

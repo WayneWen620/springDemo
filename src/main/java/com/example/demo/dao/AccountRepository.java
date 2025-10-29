@@ -1,18 +1,18 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Account;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import com.example.demo.dto.AccountDTO;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> , JpaSpecificationExecutor<Account> {
-    public List<Account> findByName(String name);
+    @EntityGraph(attributePaths = {"role", "role.authorities"})
+    public Optional<Account> findByName(String name);
     public List<Account> findByNameAndGender(String name,String gender);
     public List<Account> findByTelephoneLike(String telephone);
 

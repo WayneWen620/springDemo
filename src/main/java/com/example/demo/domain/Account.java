@@ -25,7 +25,7 @@ public class Account {
     @Column(name = "password")
     private String password;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id") // 外鍵欄位名稱
+    @JoinColumn(name = "role_id")
     private Role role;
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true; // 預設啟用

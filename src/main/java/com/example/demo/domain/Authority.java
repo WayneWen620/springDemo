@@ -2,7 +2,7 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name="authority")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
