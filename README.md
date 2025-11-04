@@ -13,3 +13,6 @@
 3. 查看 log docker-compose logs -f redis 
 4. 停止 docker-compose down
 5. 啟動後本地會產生/mysql_data/  /redis_data/ 放 MySQL 與 Redis 的資料檔（db、log 等）
+#### 一、環境
+1. SPRING_PROFILES_ACTIVE=prod 正式
+2. SPRING_PROFILES_ACTIVE=default 一般
