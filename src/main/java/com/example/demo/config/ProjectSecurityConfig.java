@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,12 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@Profile("!prod")
 public class ProjectSecurityConfig {
+    private final SystemBasicAuthenticationEntryPoint authenticationEntryPoint;
+    public ProjectSecurityConfig(SystemBasicAuthenticationEntryPoint authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         //允許任何用戶,可以不需要登入
@@ -27,7 +33,9 @@ public class ProjectSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+                .httpBasic(httpBasic -> httpBasic
+                        .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint
+                );
         return http.build();
     }
 
@@ -43,8 +51,8 @@ public class ProjectSecurityConfig {
      *
      * @return
      */
-    @Bean
-    public CompromisedPasswordChecker compromisedPasswordChecker() {
-        return new HaveIBeenPwnedRestApiPasswordChecker();
-    }
+//    @Bean
+//    public CompromisedPasswordChecker compromisedPasswordChecker() {
+//        return new HaveIBeenPwnedRestApiPasswordChecker();
+//    }
 }
