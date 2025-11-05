@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,8 +40,9 @@ public class ProjectSecurityConfig {
         //myAccount 會受保護,需要登入才能使用,Hello不受限制
         http
                 .sessionManagement(smc->smc.invalidSessionUrl("/invalidSession")
-                        .sessionFixation().none())
-
+                        .maximumSessions(1).maxSessionsPreventsLogin(true) // 用 false 才會踢掉舊 session
+                        .maxSessionsPreventsLogin(false)
+                        .sessionRegistry(sessionRegistry())) // true: 阻止新登入, false: 踢掉舊 session
                 .csrf(csrf -> csrf.disable()) // 先關掉 CSRF
                 .authorizeHttpRequests(auth -> auth
                          .requestMatchers("/Hello","/register","/invalidSession").permitAll()                    // GET /Hello 放行
@@ -52,7 +55,10 @@ public class ProjectSecurityConfig {
                 ).exceptionHandling(ehc ->ehc.accessDeniedHandler(systemAccessDeniedHandler));
         return http.build();
     }
-
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
