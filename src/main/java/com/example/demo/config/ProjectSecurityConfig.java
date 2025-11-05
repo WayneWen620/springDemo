@@ -17,8 +17,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Profile("!prod")
 public class ProjectSecurityConfig {
     private final SystemBasicAuthenticationEntryPoint authenticationEntryPoint;
-    public ProjectSecurityConfig(SystemBasicAuthenticationEntryPoint authenticationEntryPoint) {
+    private final SystemAccessDeniedHandler systemAccessDeniedHandler;
+    public ProjectSecurityConfig(SystemBasicAuthenticationEntryPoint authenticationEntryPoint
+    ,SystemAccessDeniedHandler systemAccessDeniedHandler) {
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.systemAccessDeniedHandler = systemAccessDeniedHandler;
     }
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -35,7 +38,7 @@ public class ProjectSecurityConfig {
                 .formLogin(withDefaults())
                 .httpBasic(httpBasic -> httpBasic
                         .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint
-                );
+                ).exceptionHandling(ehc ->ehc.accessDeniedHandler(systemAccessDeniedHandler));
         return http.build();
     }
 
