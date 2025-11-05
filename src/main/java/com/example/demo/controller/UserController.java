@@ -1,15 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Account;
-import com.example.demo.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -63,4 +59,6 @@ public class UserController {
         System.out.println("name:"+account.getName()+";password:"+account.getPassword()+";Tel:"+account.getTelephone()+";addr:"+account.getAddress());
         return "success";
     }
+
+
 }

@@ -49,9 +49,5 @@ public class AccountController {
                     .body("An exception occurred:"+e.getMessage());
         }
     }
-    @GetMapping("/invalidSession")
-    @ResponseBody
-    public String invalidSession() {
-        return "Session 過期，請重新登入";
-    }
+
 }

@@ -39,17 +39,35 @@ public class ProjectSecurityConfig {
 //        http.authorizeHttpRequests((request)->request.anyRequest().permitAll());
         //myAccount 會受保護,需要登入才能使用,Hello不受限制
         http
-                .sessionManagement(smc->smc.invalidSessionUrl("/invalidSession")
-                        .maximumSessions(1).maxSessionsPreventsLogin(true) // 用 false 才會踢掉舊 session
-                        .maxSessionsPreventsLogin(false)
-                        .sessionRegistry(sessionRegistry())) // true: 阻止新登入, false: 踢掉舊 session
                 .csrf(csrf -> csrf.disable()) // 先關掉 CSRF
                 .authorizeHttpRequests(auth -> auth
-                         .requestMatchers("/Hello","/register","/invalidSession").permitAll()                    // GET /Hello 放行
+                        .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").authenticated()            // 受保護
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
+
+                .formLogin(form -> form
+                        .loginPage("/login")              // 告訴 Spring Login UI 在這裡
+                        .loginProcessingUrl("/login")     // 表單提交處
+                        .defaultSuccessUrl("/home", true)  // 登入成功導向
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/logout-success")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+                .sessionManagement(smc->smc
+                        .invalidSessionUrl("/invalidSession")
+                        .sessionConcurrency(concurrency ->concurrency
+                                .maximumSessions(1)
+                                .maxSessionsPreventsLogin(false)
+                                .expiredUrl("/invalidSession")
+                                .sessionRegistry(sessionRegistry())
+                        )
+                )
                 .httpBasic(httpBasic -> httpBasic
                         .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint
                 ).exceptionHandling(ehc ->ehc.accessDeniedHandler(systemAccessDeniedHandler));
