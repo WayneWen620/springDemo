@@ -17,25 +17,52 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @Profile("prod")
 public class ProjectSecurityProdConfig {
+    private final SystemBasicAuthenticationEntryPoint authenticationEntryPoint;
+    private final SystemAccessDeniedHandler systemAccessDeniedHandler;
+    public ProjectSecurityProdConfig(SystemBasicAuthenticationEntryPoint authenticationEntryPoint
+            ,SystemAccessDeniedHandler systemAccessDeniedHandler) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.systemAccessDeniedHandler = systemAccessDeniedHandler;
+    }
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+
         //允許任何用戶,可以不需要登入
 //        http.authorizeHttpRequests((request)->request.anyRequest().permitAll());
         //myAccount 會受保護,需要登入才能使用,Hello不受限制
         http
-                .sessionManagement(smc->smc.invalidSessionUrl("/invalidSession")
-                        .maximumSessions(1).maxSessionsPreventsLogin(true) // 用 false 才會踢掉舊 session
-                        .maxSessionsPreventsLogin(false)
-                        .sessionRegistry(sessionRegistry())) //
-                .requiresChannel(rcc -> rcc.anyRequest().requiresSecure())//only https
-                .csrf(csrf -> csrf.disable()) // 先關掉 CSRF
                 .authorizeHttpRequests(auth -> auth
-                         .requestMatchers("/Hello","/register").permitAll()                    // GET /Hello 放行
+                        .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").authenticated()            // 受保護
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
-                .httpBasic(withDefaults());
+
+                .formLogin(form -> form
+                        .loginPage("/login")              // 告訴 Spring Login UI 在這裡
+                        .loginProcessingUrl("/login")     // 表單提交處
+                        .defaultSuccessUrl("/home", true)  // 登入成功導向
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/logout-success")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+                .sessionManagement(smc->smc
+                        .invalidSessionUrl("/invalidSession")
+                        .sessionConcurrency(concurrency ->concurrency
+                                .maximumSessions(1)
+                                .maxSessionsPreventsLogin(false)
+                                .expiredUrl("/invalidSession")
+                                .sessionRegistry(sessionRegistry())
+                        )
+                )
+                .httpBasic(httpBasic -> httpBasic
+                        .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint
+                ).exceptionHandling(ehc ->ehc.accessDeniedHandler(systemAccessDeniedHandler));
         return http.build();
     }
     @Bean
