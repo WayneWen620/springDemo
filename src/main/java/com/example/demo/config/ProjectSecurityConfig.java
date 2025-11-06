@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.filter.CsrfCookieFilter;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -55,7 +58,8 @@ public class ProjectSecurityConfig {
                         return config;
                     }
                 }))
-                .csrf(csrf -> csrf.disable()) // 先關掉 CSRF
+                .csrf(csrfConfig -> csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 先關掉 CSRF
+                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").authenticated()            // 受保護
