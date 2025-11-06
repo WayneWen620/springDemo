@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +21,18 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
+    // 所有人都可以讀
     @GetMapping("/myAccount")
     public String getAccountDeteils(){
         return "Here are the account details from the DB";
     }
+    // 只有 ADMIN 可以寫
+    @PostMapping("/updateAccount")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public String updateAccountDetails() {
+        return "Account updated successfully";
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AccountRegisterDTO accountRegisterDTO){
         try{

@@ -63,12 +63,13 @@ public class ProjectSecurityConfig {
                     }
                 }))
                 .csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                        .ignoringRequestMatchers("/register")
+                        .ignoringRequestMatchers("/register","/updateAccount")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 先關掉 CSRF
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
-                        .requestMatchers("/myAccount").authenticated()            // 受保護
+                        .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -93,7 +94,7 @@ public class ProjectSecurityConfig {
                                 .expiredUrl("/invalidSession")
                                 .sessionRegistry(sessionRegistry())
                         )
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .httpBasic(httpBasic -> httpBasic
                         .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint

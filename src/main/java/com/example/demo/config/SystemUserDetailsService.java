@@ -3,9 +3,9 @@ package com.example.demo.config;
 import com.example.demo.dao.AccountRepository;
 import com.example.demo.domain.Account;
 import com.example.demo.domain.Authority;
-import com.example.demo.domain.Role;
 import com.example.demo.dto.AccountDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,10 @@ public class SystemUserDetailsService implements UserDetailsService {
         List<String> authorityNames = account.getRole().getAuthorities().stream()
                 .map(Authority::getName)
                 .toList();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // 轉成 Spring Security 的 GrantedAuthority
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + account.getRole().getName()));
+
 
         AccountDTO dto = new AccountDTO(
                 account.getName(),
@@ -40,9 +44,6 @@ public class SystemUserDetailsService implements UserDetailsService {
                 authorityNames
         );
 
-        List<SimpleGrantedAuthority> authorities = dto.getAuthorities().stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
 
         return new org.springframework.security.core.userdetails.User(
                 dto.getUsername(),

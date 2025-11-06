@@ -57,7 +57,8 @@ public class ProjectSecurityProdConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
-                        .requestMatchers("/myAccount").authenticated()            // 受保護
+                        .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
