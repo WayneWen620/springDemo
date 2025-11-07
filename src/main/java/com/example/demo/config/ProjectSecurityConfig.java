@@ -1,6 +1,8 @@
 package com.example.demo.config;
 
 import com.example.demo.filter.CsrfCookieFilter;
+import com.example.demo.filter.JWTTokenGeneratorFilter;
+import com.example.demo.filter.JWTTokenValidatorFilter;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -49,7 +52,6 @@ public class ProjectSecurityConfig {
 //        http.authorizeHttpRequests((request)->request.anyRequest().permitAll());
         //myAccount 會受保護,需要登入才能使用,Hello不受限制
         http
-                .securityContext(contxtConfig ->contxtConfig.requireExplicitSave(false))
                 .cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -59,6 +61,7 @@ public class ProjectSecurityConfig {
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
                         config.setMaxAge(3600L);
+                        config.setExposedHeaders(Arrays.asList("Authorization"));
                         return config;
                     }
                 }))
@@ -66,6 +69,8 @@ public class ProjectSecurityConfig {
                         .ignoringRequestMatchers("/register","/updateAccount")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 先關掉 CSRF
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
@@ -94,7 +99,7 @@ public class ProjectSecurityConfig {
                                 .expiredUrl("/invalidSession")
                                 .sessionRegistry(sessionRegistry())
                         )
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .httpBasic(httpBasic -> httpBasic
                         .authenticationEntryPoint(authenticationEntryPoint)  // ← 指定自訂 EntryPoint
