@@ -3,6 +3,6 @@
     <!-- 初始化資料，請勿異動 -->
 <!--    <include file="classpath:db/common/create_account_tables.xml" relativeToChangelogFile="false" />-->
 <!--    <include file="classpath:db/common/instert_account_tables.xml" relativeToChangelogFile="false" />-->
-
+    <include file="classpath:db/common/instert_schedule_tables.xml" relativeToChangelogFile="false" />
 
 </databaseChangeLog>

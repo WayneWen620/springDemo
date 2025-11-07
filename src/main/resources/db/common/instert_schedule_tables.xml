@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- ✅ 插入初始資料 -->
+    <changeSet id="1-create-schedule-config" author="">
+        <createTable tableName="schedule_config">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="cron_expression" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-schedule-log" author="">
+        <createTable tableName="schedule_log">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_name" type="VARCHAR(100)"/>
+            <column name="run_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="success" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <!-- 插入範例排程資料 -->
+    <changeSet id="3-insert-demo-task" author="">
+        <insert tableName="schedule_config">
+            <column name="task_name" value="demoTask"/>
+            <column name="cron_expression" value="0/30 * * * * ?"/> <!-- 每30秒執行一次 -->
+            <column name="enabled" valueBoolean="true"/>
+            <column name="description" value="範例 DemoTaskService 排程"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
