@@ -1,7 +1,8 @@
 package com.example.demo.dao;
 
-import com.example.demo.domain.Account;
-import com.example.demo.domain.Role;
+import com.example.demo.modules.account.dao.RoleRepository;
+import com.example.demo.modules.account.domain.Account;
+import com.example.demo.modules.account.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

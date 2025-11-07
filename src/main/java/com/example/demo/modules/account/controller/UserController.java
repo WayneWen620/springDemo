@@ -1,6 +1,6 @@
-package com.example.demo.controller;
+package com.example.demo.modules.account.controller;
 
-import com.example.demo.domain.Account;
+import com.example.demo.modules.account.domain.Account;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

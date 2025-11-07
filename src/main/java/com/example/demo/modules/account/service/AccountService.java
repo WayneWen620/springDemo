@@ -1,6 +1,6 @@
-package com.example.demo.service;
+package com.example.demo.modules.account.service;
 
-import com.example.demo.domain.Account;
+import com.example.demo.modules.account.domain.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

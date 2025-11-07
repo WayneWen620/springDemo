@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.domain.Account;
+import com.example.demo.modules.account.domain.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;

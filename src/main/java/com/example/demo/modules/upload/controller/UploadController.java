@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.modules.upload.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

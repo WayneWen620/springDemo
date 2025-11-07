@@ -1,12 +1,10 @@
-package com.example.demo.dao;
+package com.example.demo.modules.account.dao;
 
-import com.example.demo.domain.Account;
-import com.example.demo.dto.AccountDTO;
+import com.example.demo.modules.account.domain.Account;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
-import com.example.demo.domain.Account;
+import com.example.demo.modules.account.dao.AccountRepository;
+import com.example.demo.modules.account.domain.Account;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

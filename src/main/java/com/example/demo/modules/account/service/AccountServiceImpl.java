@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.modules.account.service;
 
-import com.example.demo.dao.AccountRepository;
-import com.example.demo.domain.Account;
+import com.example.demo.modules.account.dao.AccountRepository;
+import com.example.demo.modules.account.domain.Account;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

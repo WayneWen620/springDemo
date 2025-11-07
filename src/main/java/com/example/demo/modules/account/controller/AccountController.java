@@ -1,10 +1,10 @@
-package com.example.demo.controller;
+package com.example.demo.modules.account.controller;
 
-import com.example.demo.dao.AccountRepository;
-import com.example.demo.dao.RoleRepository;
-import com.example.demo.domain.Account;
-import com.example.demo.domain.Role;
-import com.example.demo.dto.AccountRegisterDTO;
+import com.example.demo.modules.account.dao.AccountRepository;
+import com.example.demo.modules.account.dao.RoleRepository;
+import com.example.demo.modules.account.domain.Account;
+import com.example.demo.modules.account.domain.Role;
+import com.example.demo.modules.account.dto.AccountRegisterDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

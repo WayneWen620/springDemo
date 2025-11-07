@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.modules.account.dto;
 
 import lombok.Data;
 

@@ -1,9 +1,9 @@
 package com.example.demo.config;
 
-import com.example.demo.dao.AccountRepository;
-import com.example.demo.domain.Account;
-import com.example.demo.domain.Authority;
-import com.example.demo.dto.AccountDTO;
+import com.example.demo.modules.account.dao.AccountRepository;
+import com.example.demo.modules.account.domain.Account;
+import com.example.demo.modules.account.domain.Authority;
+import com.example.demo.modules.account.dto.AccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
