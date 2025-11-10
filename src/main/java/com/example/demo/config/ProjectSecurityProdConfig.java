@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -53,10 +55,10 @@ public class ProjectSecurityProdConfig {
                 }))
                 .securityContext(contxtConfig ->contxtConfig.requireExplicitSave(false))
                 .csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                        .ignoringRequestMatchers("/register")
+                        .ignoringRequestMatchers("/register","/updateAccount","/apiLogin")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success").permitAll()                    // GET /Hello 放行
+                        .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success","/apiLogin").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
@@ -110,5 +112,15 @@ public class ProjectSecurityProdConfig {
     @Bean
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(SystemUserDetailsService userDetailsService
+            , PasswordEncoder passwordEncoder){
+        SystemUsernamePwdAuthenticationProvider authenticationProvider =
+                new SystemUsernamePwdAuthenticationProvider(userDetailsService,passwordEncoder);
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+        providerManager.setEraseCredentialsAfterAuthentication(false);
+        return  providerManager;
     }
 }
