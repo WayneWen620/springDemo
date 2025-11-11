@@ -69,8 +69,9 @@ public class ProjectSecurityConfig {
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success","/apiLogin").permitAll()                    // GET /Hello 放行
-                        .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
+                        .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/userDetails").authenticated()
                         .anyRequest().authenticated()
                 )
 
