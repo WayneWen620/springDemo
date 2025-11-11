@@ -22,8 +22,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @Profile("prod")
 public class ProjectSecurityProdConfig {
@@ -61,6 +59,7 @@ public class ProjectSecurityProdConfig {
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success","/apiLogin").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
+                        .requestMatchers("/userDetails").authenticated()
                         .anyRequest().authenticated()
                 )
 
