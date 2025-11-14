@@ -8,6 +8,7 @@ import com.example.demo.modules.account.domain.Role;
 import com.example.demo.modules.account.dto.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -38,18 +39,21 @@ public class AccountController {
     private final Environment env;
 
     // 所有人都可以讀
+    @Operation(summary = "取得使用者資料", description = "")
     @GetMapping("/myAccount")
     public String getAccountDeteils() {
         return "Here are the account details from the DB";
     }
 
     // 只有 ADMIN 可以寫
+    @Operation(summary = "更新使用者資料(特定角色可以用)", description = "")
     @PostMapping("/updateAccount")
 //    @PreAuthorize("hasRole('ADMIN')")
     public String updateAccountDetails() {
         return "Account updated successfully";
     }
 
+    @Operation(summary = "註冊", description = "")
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody AccountRegisterDTO accountRegisterDTO) {
         try {
@@ -76,7 +80,7 @@ public class AccountController {
                     .body("An exception occurred:" + e.getMessage());
         }
     }
-
+    @Operation(summary = "API登入獲得TOKEN", description = "")
     @PostMapping("/apiLogin")
     public ResponseEntity<LoginResponseDTO> apiLogin(@RequestBody LoginRequestDTO loginRequest) {
         String jwt = null;
@@ -99,6 +103,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).header(ApplicationConstants.JWT_HEADER, jwt)
                 .body(new LoginResponseDTO(HttpStatus.OK.getReasonPhrase(), jwt));
     }
+    @Operation(summary = "獲取使用者資料", description = "取得使用者相關資料")
     @PostAuthorize("hasRole('USER')")
     @GetMapping("/userDetails")
     public AccountResponseDTO getUserDetails(@RequestParam long id) {

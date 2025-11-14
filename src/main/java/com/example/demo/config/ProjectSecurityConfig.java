@@ -62,12 +62,13 @@ public class ProjectSecurityConfig {
                     }
                 }))
                 .csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                        .ignoringRequestMatchers("/register","/updateAccount","/apiLogin")
+                        .ignoringRequestMatchers("/register","/updateAccount","/apiLogin","/swagger-ui/**","/v3/api-docs/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 先關掉 CSRF
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**").permitAll()
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success","/apiLogin").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
                         .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")

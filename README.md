@@ -55,3 +55,7 @@
     - `db.changelog-master.xml`：主變更檔，引用其他變更檔
     - `db/common/instert_schedule_tables.xml`：建表與範例資料
 --
+
+### 新增Swagger說明
+
+http://localhost:8080/swagger-ui/index.html
