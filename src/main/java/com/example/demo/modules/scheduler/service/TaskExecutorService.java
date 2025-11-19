@@ -15,7 +15,7 @@ public class TaskExecutorService {
 
     private final ScheduleLogRepository scheduleLogRepository;
     private final DemoTaskService demoTaskService; // 假設你有多個 task, 之後可再加
-
+    private final DailyTaskService dailyTaskService;
     public void run(String taskName) {
 
         ScheduleLog logRecord = new ScheduleLog();
@@ -25,6 +25,7 @@ public class TaskExecutorService {
         try {
             switch (taskName) {
                 case "demoTask" -> demoTaskService.run(); // ⬅ 直接呼叫邏輯 Service
+                case "dailyTask" -> dailyTaskService.run();
                 // case "otherTask" -> otherTaskService.run();
                 default -> throw new IllegalArgumentException("無法識別排程任務: " + taskName);
             }

@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -62,7 +61,7 @@ public class ProjectSecurityConfig {
                     }
                 }))
                 .csrf(csrfConfig -> csrfConfig.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                        .ignoringRequestMatchers("/register","/updateAccount","/apiLogin","/swagger-ui/**","/v3/api-docs/**")
+                        .ignoringRequestMatchers("/register","/updateAccount","/apiLogin","/swagger-ui/**","/v3/api-docs/**","/api/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // 先關掉 CSRF
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
@@ -71,7 +70,7 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/swagger-ui/**","/swagger-ui.html","/v3/api-docs/**").permitAll()
                         .requestMatchers("/Hello","/register","/invalidSession","/home","/logout-success","/apiLogin").permitAll()                    // GET /Hello 放行
                         .requestMatchers("/updateAccount").hasAnyRole("ADMIN")
-                        .requestMatchers("/myAccount").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/myAccount","/api/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/userDetails").authenticated()
                         .anyRequest().authenticated()
                 )

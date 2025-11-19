@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="20251119-create-daily-tranction-stock-data" author="Steven">
+
+        <createTable tableName="daily_tranction_stock_data" remarks="上市個股日成交資訊">
+            <column name="ID" type="INT" autoIncrement="true" remarks="">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="DATE" type="VARCHAR(45)" remarks="證券獲取時間"/>
+            <column name="CODE" type="VARCHAR(45)" remarks="證券代號"/>
+            <column name="NAME" type="VARCHAR(45)" remarks="證券名稱"/>
+            <column name="TRADE_VOLUME" type="INT" remarks="成交股數"/>
+            <column name="TRADE_VALUE" type="BIGINT" remarks="成交金額"/>
+            <column name="OPENING_PRICE" type="DECIMAL(10,2)" remarks="開盤價"/>
+            <column name="HIGHEST_PRICE" type="DECIMAL(10,2)" remarks="最高價"/>
+            <column name="LOWEST_PRICE" type="DECIMAL(10,2)" remarks="最低價"/>
+            <column name="CHANGE_GAP" type="DECIMAL(10,2)" remarks="漲跌價差"/>
+            <column name="CLOSING_PRICE" type="DECIMAL(10,2)" remarks="收盤價"/>
+            <column name="TRANSACTION_COUNT" type="INT" remarks="成交筆數"/>
+            <column name="CREATE_TIME" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" remarks="建立時間"/>
+        </createTable>
+
+    </changeSet>
+    <changeSet id="20251119-insert-demo-task" author="">
+        <insert tableName="schedule_config">
+            <column name="task_name" value="dailyTask"/>
+            <column name="cron_expression" value="0 0 17 * * ?"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="description" value="上市個股日成交資訊-存入 下午五點寫入"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
