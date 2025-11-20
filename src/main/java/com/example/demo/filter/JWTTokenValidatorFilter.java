@@ -1,10 +1,7 @@
 package com.example.demo.filter;
 
 import com.example.demo.constants.ApplicationConstants;
-
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -53,6 +50,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                                 .getBody();
                         String username = String.valueOf(claims.get("username"));
                         String authorities = String.valueOf(claims.get("authorities"));
+
+
                         Authentication authentication = new UsernamePasswordAuthenticationToken(username,null ,
                                 AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
