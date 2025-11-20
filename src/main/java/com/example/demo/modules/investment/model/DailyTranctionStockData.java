@@ -1,6 +1,7 @@
 package com.example.demo.modules.investment.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,9 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
+@Entity
+@Table(name = "daily_tranction_stock_data",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "code"})}) // DATE + CODE 唯一
 public class DailyTranctionStockData {
 
     //上市個股日成交資訊
@@ -27,42 +31,61 @@ public class DailyTranctionStockData {
 //		  "Change": "string", //漲跌價差
 //		  "Transaction": "string" //成交筆數
 //		}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "create_time", nullable = false, updatable = false)
     private Timestamp create_time;
 
+    @Column(name = "date", nullable = false)
     @JsonProperty(value="Date")
-    private String date;
+    private String date;  // 若想用 LocalDate 也可以，但要轉換格式
 
+    @Column(name = "code")
     @JsonProperty(value="Code")
     private String code;
 
+    @Column(name = "name")
     @JsonProperty(value="Name")
     private String name;
 
+    @Column(name = "trade_volume")
     @JsonProperty(value="TradeVolume")
     private Integer trade_volume;
 
+    @Column(name = "trade_value")
     @JsonProperty(value="TradeValue")
     private BigInteger trade_value;
 
+    @Column(name = "opening_price")
     @JsonProperty(value="OpeningPrice")
     private BigDecimal opening_price;
 
     @JsonProperty(value="HighestPrice")
+    @Column(name = "highest_price")
     private BigDecimal highest_price;
 
     @JsonProperty(value="LowestPrice")
+    @Column(name = "lowest_price")
     private BigDecimal lowest_price;
 
     @JsonProperty(value="ClosingPrice")
+    @Column(name = "closing_price")
     private BigDecimal closing_price;
 
     @JsonProperty(value="Change")
+    @Column(name = "change_gap")
     private BigDecimal change_gap;
 
     @JsonProperty(value="Transaction")
+    @Column(name = "transaction_count")
     private Integer transaction_count;
+
+    @PrePersist
+    protected void onCreate() {
+        this.create_time = new Timestamp(System.currentTimeMillis());
+    }
 
     public DailyTranctionStockData() {
 
