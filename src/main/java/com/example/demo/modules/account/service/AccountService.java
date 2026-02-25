@@ -16,4 +16,6 @@ public interface AccountService {
     public Page<Account> findByPage(Pageable pageable);
 
     public void save(Account account);
+
+    Account findByName(String name);
 }

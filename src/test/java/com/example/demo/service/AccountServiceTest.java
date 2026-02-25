@@ -3,21 +3,18 @@ package com.example.demo.service;
 import com.example.demo.modules.account.dao.AccountRepository;
 import com.example.demo.modules.account.domain.Account;
 import com.example.demo.modules.account.service.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@RequiredArgsConstructor
 public class AccountServiceTest {
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private AccountService accountService;
-
+    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     @Test
     void findAll() {

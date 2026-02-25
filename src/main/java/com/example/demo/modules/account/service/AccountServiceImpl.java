@@ -3,7 +3,7 @@ package com.example.demo.modules.account.service;
 import com.example.demo.modules.account.dao.AccountRepository;
 import com.example.demo.modules.account.domain.Account;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,9 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AccountServiceImpl implements  AccountService{
-    @Autowired
-    private  AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public List<Account> findAll() {
@@ -36,5 +36,11 @@ public class AccountServiceImpl implements  AccountService{
     @Override
     public void save(Account account) {
         accountRepository.save(account);
+    }
+
+    @Override
+    public Account findByName(String name) {
+        return accountRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found, name=" + name));
     }
 }
